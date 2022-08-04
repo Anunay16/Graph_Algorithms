@@ -14,6 +14,8 @@ struct Edge {
     }
 };
 
+const int INF = 1e9;
+
 void dijkstras(vector<vector<Edge>>& adj, vector<bool>& visited, vector<int>& shortestPaths, int src) {
     //make a priority queue: min heap
     priority_queue<pi, vector<pi>, greater<pi>> pq; // <wt, vertex>
@@ -28,11 +30,12 @@ void dijkstras(vector<vector<Edge>>& adj, vector<bool>& visited, vector<int>& sh
         if (visited[vtx]) continue; // cycle detected
         visited[vtx] = true;
         //work
-        shortestPaths[vtx] = wt;
+        // shortestPaths[vtx] = wt;
         //add*
         for (auto &edge: adj[vtx]) {
-            if (!visited[edge.v]) {
-                pq.push({wt + edge.wt, edge.v});
+            if (wt + edge.wt < shortestPaths[edge.v]) {
+                shortestPaths[edge.v] = wt + edge.wt;
+                pq.push({shortestPaths[edge.v], edge.v});
             }
         }
     }
@@ -52,27 +55,27 @@ void solve() {
     int src;
     cin >> src;
     vector<bool> visited(V + 1, false);
-    vector<int> shortestPaths(V + 1, -1);
+    vector<int> shortestPaths(V + 1, INF);
     dijkstras(adj, visited, shortestPaths, src);
     for (int i = 1; i < V + 1; i++) {
         if (i != src) {
-            cout << shortestPaths[i] << " ";
+            cout << (shortestPaths[i] == INF ? -1 : shortestPaths[i]) << " ";
         }
     }
     cout << "\n";
 }
 
-void FIO()
-{
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
-}
+// void FIO()
+// {
+//     #ifndef ONLINE_JUDGE
+//         freopen("input.txt", "r", stdin);
+//         freopen("output.txt", "w", stdout);
+//     #endif
+// }
 
 int main()
 {
-    FIO();
+    //FIO();
     int t;
     cin >> t;
     while (t--) {
